@@ -8,13 +8,15 @@ shares the responses across windows. Communication with workers is asynchronous,
 but so are HTTP requests, so your application code really can't tell the
 difference (except now it can leverage the promises returned by satellite).
 
-### Pain Points
+## Goals for Project
+
+### Pain Points to Solve
 - Need to share data between windows
 - Redundant service calls
 - No service calls on close
 - Slow data updates
 
-### Features
+### Features to Implement
 - Instant data updates
 - API definition for endpoints
 - Batching service calls
