@@ -1,0 +1,20 @@
+{
+  "name": "satellite-services",
+  "version": "0.1.0",
+  "description": "Shared service worker with system learning technology for caching and retrieving fresh data",
+  "license": "MIT 2016",
+  "author": {
+    "name": "Travis Towne",
+    "email": "travis.towne@atsid.com",
+    "url": "https://github.com/ttowne"
+  },
+  "repository": {
+     "type": "git",
+     "url": "https://github.com/ttowne/satellite-services"
+  },
+  "keywords": [],
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-serve": "^1.2.0"
+  }
+}
