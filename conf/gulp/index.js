@@ -1,11 +1,15 @@
 var gulp = require('gulp'),
-    serve = require('gulp-serve'),
-    eslint = require('gulp-eslint');
- 
-gulp.task('serve', serve([
-  'src',
-  'examples'
-]));
+    eslint = require('gulp-eslint'),
+    path = require('path'),
+    serverPath = path.resolve(__dirname, '../../dev/server.js'),
+    exec = require('child_process').exec;
+
+gulp.task('serve', function () {
+    var child = exec(`node ${serverPath}`);
+    child.stdout.on('data', function (data) {
+        console.log(data);
+    });
+});
 
 gulp.task('eslint', function () {
     return gulp.src([

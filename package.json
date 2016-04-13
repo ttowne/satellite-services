@@ -16,6 +16,8 @@
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-eslint": "^2.0.0",
-    "gulp-serve": "^1.2.0"
+    "gulp-serve": "^1.2.0",
+    "express": "~4.13.4",
+    "mongoose": "~4.4.12"
   }
 }
