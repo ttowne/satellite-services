@@ -1,15 +1,19 @@
-var gulp = require('gulp'),
-    path = require('path'),
-    karma = require('karma'),
-    eslint = require('gulp-eslint'),
+var eslint = require('gulp-eslint'),
     exec = require('child_process').exec,
-    serverPath = path.resolve(__dirname, '../../dev/server.js');
+    gulp = require('gulp'),
+    karma = require('karma'),
+    path = require('path'),
+    serverPath = '../../dev/server.js',
+    spawn = require('child_process').spawn;
 
 gulp.task('serve', function () {
-    var child = exec('node ' + serverPath);
+    var child = spawn('node', [path.resolve(__dirname, serverPath)]);
     child.stdout.on('data', function (data) {
-        console.log(data);
+        process.stdout.write(data);
     });
+    child.stderr.on('data', function (data) {
+        process.stderr.write(data);
+    })
 });
 
 gulp.task('eslint', function () {
