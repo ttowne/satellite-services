@@ -1,33 +1,15 @@
 (function () {
     var outputNode = document.getElementById('fetch-result'),
-        params,
         request = new XMLHttpRequest(),
-        query,
-        url = 'https://en.wikipedia.org/w/api.php',
+        url = 'http://localhost:3000/todo/users',
         worker = new SharedWorker('../worker/main.js');
 
-    //https://en.wikipedia.org/w/api.php?action=query&titles=Satellite&prop=info|revisions&rvprop=content&rvlimi1=1&format=json&origin=localhost
-
-    params = {
-        action: 'query',
-        titles: 'Satellite',
-        prop: 'info|revisions',
-        rvprop: 'content',
-        rvlimit: 1,
-        format: 'json',
-        origin: 'http://0.0.0.0:3000'
-    };
-
-    query = Object.keys(params).reduce(function (sum, current, i) {
-        return `${sum}${i ? '&' : ''}${current}=${encodeURIComponent(params[current])}`;
-    }, '?');
-
-    request.onreadystatechange = function () {
-        console.log(request);
-        if (request.readyState === 4) {
-            outputNode.innerText = request.responseText;
-        }
-    }
-    request.open('GET', 'https://en.wikipedia.org/w/api.php' + query);
+    request.addEventListener('load', function () {
+        var users = JSON.parse(request.responseText);
+        users.forEach(function (user) {
+            outputNode.textContent += `${user.username} :: ${new Date(user.created)}`;
+        });
+    });
+    request.open('GET', url);
     request.send();
 }());
