@@ -1,19 +1,13 @@
-var eslint = require('gulp-eslint'),
-    exec = require('child_process').exec,
-    gulp = require('gulp'),
+var gulp = require('gulp'),
+    babel = require('gulp-babel'),
+    eslint = require('gulp-eslint'),
     karma = require('karma'),
-    path = require('path'),
-    serverPath = '../../dev/server.js',
-    spawn = require('child_process').spawn;
+    serve = require('./serve.js');
 
-gulp.task('serve', function () {
-    var child = spawn('node', [path.resolve(__dirname, serverPath)]);
-    child.stdout.on('data', function (data) {
-        process.stdout.write(data);
-    });
-    child.stderr.on('data', function (data) {
-        process.stderr.write(data);
-    })
+gulp.task('build', function () {
+    return gulp.src('src/**/*.js')
+        .pipe(babel())
+        .pipe(gulp.dest('dist'));
 });
 
 gulp.task('eslint', function () {
@@ -23,6 +17,8 @@ gulp.task('eslint', function () {
         'examples/**/*.js'
     ]).pipe(eslint()).pipe(eslint.format()).pipe(eslint.failAfterError());
 });
+
+gulp.task('serve', serve);
 
 gulp.task('test', function (done) {
     return new karma.Server({
