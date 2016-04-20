@@ -19,6 +19,7 @@ gulp.task('serve', function () {
 gulp.task('eslint', function () {
     return gulp.src([
         'src/**/*.js',
+        'test/**/*.js',
         'examples/**/*.js'
     ]).pipe(eslint()).pipe(eslint.format()).pipe(eslint.failAfterError());
 });

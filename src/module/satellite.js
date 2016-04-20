@@ -1,15 +1,27 @@
-(function () {
-    var outputNode = document.getElementById('fetch-result'),
-        request = new XMLHttpRequest(),
-        url = 'http://localhost:3000/todo/users',
-        worker = new SharedWorker('../worker/main.js');
+import satelliteUtils from 'satelliteUtils';
 
-    request.addEventListener('load', function () {
-        var users = JSON.parse(request.responseText);
-        users.forEach(function (user) {
-            outputNode.textContent += `${user.username} :: ${new Date(user.created)}`;
-        });
-    });
-    request.open('GET', url);
-    request.send();
-}());
+function createServiceMethod () {
+    var promise = new Promise();
+
+    promise.resolve();
+
+    return promise;
+}
+
+function satellite (config) {
+    var obj,
+        name = config.name || '',
+        chain = name.split('.'),
+        key = chain.shift();
+
+    if (!key) {
+        return satellite;
+    }
+
+    obj = chain.length ? satelliteUtils.createResolvedChain(chain, satellite) : satellite;
+    obj[key] = createServiceMethod(config.path);
+
+    return satellite;
+}
+
+export default satellite;
