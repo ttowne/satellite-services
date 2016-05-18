@@ -24,8 +24,12 @@
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.22",
     "karma-chrome-launcher": "^0.2.3",
+    "karma-commonjs": "^1.0.0",
     "karma-jasmine": "^0.3.8",
+    "karma-requirejs": "^1.0.0",
+    "merge-stream": "^1.0.0",
     "mongoose": "^4.4.12",
-    "password-hash": "^1.2.2"
+    "password-hash": "^1.2.2",
+    "requirejs": "^2.2.0"
   }
 }

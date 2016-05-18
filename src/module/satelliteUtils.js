@@ -4,7 +4,7 @@ satelliteUtils = {
 
     createResolvedChain: function (paths, obj) {
         var key = paths.shift(),
-            next = obj[key];
+            next = (obj || {})[key];
 
         if (!obj) {
             return null;
@@ -16,15 +16,11 @@ satelliteUtils = {
 
         if (!next) {
             next = obj[key] = function () {
-                var promise = new Promise();
-
-                promise.resolve();
-
-                return promise;
+                return Promise.resolve();
             };
         }
 
-        return paths.length ? satelliteUtils.createResolvedChain(next, paths) : next;
+        return paths.length ? satelliteUtils.createResolvedChain(paths, next) : next;
     }
 
 };
