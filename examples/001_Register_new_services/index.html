@@ -17,19 +17,6 @@
     <button id="fetch-button">Fetch</button>
 
     <blockquote id="fetch-result" style="white-space: pre;"></blockquote>
-    <script type="text/javascript">
-        (function () {
-            var outputNode = document.getElementById('fetch-result'),
-                request = new XMLHttpRequest(),
-                url = 'http://localhost:3000/todo/users',
-                worker;
-
-            navigator.serviceWorker
-                .register('/worker/main.js', {scope: 'https://localhost:3001/'})
-                .then(function (reg) {
-                    console.log(reg);
-                });
-        }());
-    </script>
+    <script src="001.js"></script>
 </body>
 </html>
