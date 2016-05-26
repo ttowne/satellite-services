@@ -5,7 +5,7 @@ const port = worker.port;
 const TIMEOUT = 300000;
 
 port.start();
-addEventListener('unload', port.stop.bind(port));
+addEventListener('unload', port.close.bind(port));
 
 function messageServices (config, params) {
     var timer,
