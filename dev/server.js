@@ -8,7 +8,8 @@ server.get('/', function (req, res) {
     res.send('This is a development server for the satellite-services library.');
 });
 
-server.use(express.static('dist'));
+server.use(express.static('build/src'));
+server.use(express.static('build'));
 server.use(express.static('examples'));
 
 server.use('/todo', todo);

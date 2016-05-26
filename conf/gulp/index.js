@@ -1,22 +1,37 @@
 var gulp = require('gulp'),
     babel = require('gulp-babel'),
+    del = require('del'),
     eslint = require('gulp-eslint'),
+    flatten = require('gulp-flatten'),
     karma = require('karma'),
     merge = require('merge-stream'),
     serve = require('./serve.js');
 
-gulp.task('build', function () {
-    var src = gulp.src([
-            'src/**/*.js',
-        ]).pipe(babel()).pipe(gulp.dest('dist/src')),
-        test = gulp.src([
-            'test/**/*.js',
-        ]).pipe(babel()).pipe(gulp.dest('dist/test')),
-        examples = gulp.src([
-            'examples/**/*.js'
-        ]).pipe(babel()).pipe(gulp.dest('dist/examples'));
+gulp.task('build', ['clean'], function () {
+    var src, lib, test, testMain;
 
-    return merge(src, test).add(examples);
+    src = gulp.src([
+        'src/**/*.js',
+    ]).pipe(babel({
+        ignore: 'src/worker/main.js'
+    })).pipe(gulp.dest('build/src')),
+
+    test = gulp.src([
+        'test/**/*.js'
+    ]).pipe(babel({
+        ignore: 'test/main.js'
+    })).pipe(gulp.dest('build/test')),
+
+    lib = gulp.src([
+        'node_modules/requirejs/require.js',
+        'node_modules/karma-requirejs/lib/adapter.js',
+    ]).pipe(gulp.dest('build/lib'));
+
+    return merge(src, test, lib);
+});
+
+gulp.task('clean', function () {
+    return del(['build/**/*', 'dist/**/*']);
 });
 
 gulp.task('eslint', function () {

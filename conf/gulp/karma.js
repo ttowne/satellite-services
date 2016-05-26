@@ -1,23 +1,14 @@
 module.exports = function (config) {
     config.set({
-        basePath: '../../dist',
+        basePath: '../../build',
         colors: true,
         reporter: ['progress'],
         browsers: ['Chrome'],
-        frameworks: ['jasmine', 'commonjs'],
+        frameworks: ['jasmine', 'requirejs'],
         files: [
-            'src/**/*.js',
-            'test/**/*.js',
-            'examples/**/*.js'
-        ],
-        exclude: [
-            'src/worker/**/*.js'
-        ],
-        preprocessors: {
-            '**/*.js': ['commonjs']
-        },
-        commonjsPreprocessor: {
-          modulesRoot: 'dist/src'
-        }
+            {pattern: 'src/**/*.js', included: false},
+            {pattern: 'test/**/*.js', included: false},
+            'test/main.js'
+        ]
     });
 };

@@ -30,6 +30,8 @@ function createRequest (options) {
         password: options.password
     });
 
+    request.timeout = options.timeout || 0;
+
     Object.keys(options.headers).forEach(function (key) {
         request.setRequestHeader(key, options.headers[key]);
     });
