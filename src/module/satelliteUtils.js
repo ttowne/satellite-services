@@ -25,7 +25,7 @@ satelliteUtils = {
         return paths.length ? satelliteUtils.createResolvedChain(paths, next) : next;
     },
 
-    getResolveServicePath: function (path = '', params = {}) {
+    getResolvedPath: function (path = '', params = {}) {
         return (paramsRegExp.match(path) || []).reduce(function (str = '', arg = '') {
             var value = params[arg.replace(cleanRegExp, '')];
 

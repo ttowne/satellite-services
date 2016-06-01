@@ -1,23 +1,31 @@
 import satelliteUtils from 'module/satelliteUtils';
 
-const worker = new SharedWorker('worker/main.js');
-const port = worker.port;
-const TIMEOUT = 300000;
+const MAIN_WORKER = new SharedWorker('worker/main.js', 'satellite_services');
+const MAX_TIMEOUT = 300000;
 
-port.start();
-addEventListener('unload', port.close.bind(port));
+function getNewPort () {
+    return (new SharedWorker('worker/main.js', 'satellite_services')).port;
+}
+
+function handleResponse () {
+    return;
+}
 
 function messageServices (config, params) {
     var timer,
         promise,
         mergedParams = Object.assign({}, config, params);
 
-    mergedParams.path = satelliteUtils.getResolveServicePath(config.path, mergedParams);
+    mergedParams.url = satelliteUtils.getResolvedPath(config.url, mergedParams);
 
     promise = (new Promise(function (resolve) {
-        port.addEventListener('message', resolve);
+        port.onmessage = handleResponse.bind({}, {
+            resolve: resolve,
+            reject: reject,
+            timer: setTimeout(reject, mergedParams.timeout || TIMEOUT)
+        });
+        //TODO - figure out how to handle responses and fail on timeout.
         port.postMessage(mergedParams);
-        timer = setTimeout(reject, mergedParams.timeout || TIMEOUT);
     })).then(function (response) {
         var rejectCodes = mergedParams.rejectCodes,
             resolveCodes = mergedParams.resolveCodes;
