@@ -7,37 +7,67 @@ function getNewPort () {
     return (new SharedWorker('worker/main.js', 'satellite_services')).port;
 }
 
-function handleResponse () {
-    return;
+function handleResponse (options, msg) {
+    var response = msg.data,
+        params = options.params,
+        status = response.status;
+
+    if (isSuccessful(status, params.resolveCodes)) {
+        options.resolve(response);
+    } else if (isFailure(status, params.rejectCodes)) {
+        options.reject(response);
+    }
+}
+
+function isFailure(status, codes = []) {
+    if (codes.length) {
+        return codes.map(function (code) {
+            return parseInt(code, 10);
+        }).indexOf(status) !== -1;
+    }
+
+    return status < 200 || status > 399;
+}
+
+function isSuccessful(status, codes = []) {
+    if (codes.length) {
+        return codes.map(function (code) {
+            return parseInt(code, 10);
+        }).indexOf(status) !== -1;
+    }
+
+    return status > 199 && status < 400;
+}
+
+function rejected (response) {
+    return `${response.status} - ${response.statusText}`;
+}
+
+function resolved (response) {
+    return JSON.parse(response.responseText || '0') || response;
+}
+
+function sendRequest (params, resolve, reject) {
+    var port = getNewPort();
+
+    port.onmessage = handleResponse.bind({}, {
+        params: params,
+        reject: reject,
+        resolve: resolve,
+        timer: setTimeout(reject, TIMEOUT)
+    });
+
+    port.postMessage(params);
 }
 
 function messageServices (config, params) {
-    var timer,
-        promise,
+    var request,
         mergedParams = Object.assign({}, config, params);
 
     mergedParams.url = satelliteUtils.getResolvedPath(config.url, mergedParams);
+    request = sendRequest.bind({}, mergedParams);
 
-    promise = (new Promise(function (resolve) {
-        port.onmessage = handleResponse.bind({}, {
-            resolve: resolve,
-            reject: reject,
-            timer: setTimeout(reject, mergedParams.timeout || TIMEOUT)
-        });
-        //TODO - figure out how to handle responses and fail on timeout.
-        port.postMessage(mergedParams);
-    })).then(function (response) {
-        var rejectCodes = mergedParams.rejectCodes,
-            resolveCodes = mergedParams.resolveCodes;
-
-        if (true) {
-            //todo
-        }
-    }, function () {
-        return;
-    });
-
-    return promise;
+    return(new Promise(request)).then(resolved, rejected);
 }
 
 /**
